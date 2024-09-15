@@ -37,5 +37,29 @@ public class ExampleTest : PageTest
         {
             Path = "screenshot-link.png"
         });
-    } 
+    }
+
+    [TestMethod]
+    public async Task JoinFormEmailValidation()
+    {
+        await Page.GotoAsync("http://localhost:5273/Join");
+        await Page.GetByLabel("Email").FillAsync("example@example.com");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+        await Expect(Page.GetByText("Email address must be provided.")).ToBeVisibleAsync(new() { Visible = false });
+
+    }
+
+    [TestMethod]
+    public async Task JoinFormEmailValidationErrorVisible()
+    {
+        await Page.GotoAsync("http://localhost:5273/Join");
+        //await Page.GetByLabel("Email").FillAsync("example@example.com");
+
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();
+
+        await Expect(Page.GetByText("Email address must be provided.")).ToBeVisibleAsync();
+        
+    }
 }
